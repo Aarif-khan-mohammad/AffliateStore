@@ -1,6 +1,20 @@
 let allProducts = [];
 let filteredProducts = [];
 let currentCategory = 'All';
+let currentPage = 1;
+let itemsPerPage = 10;
+
+// Calculate items per page based on screen size
+function updateItemsPerPage() {
+  const width = window.innerWidth;
+  if (width >= 1024) {
+    itemsPerPage = 25; // 5 columns × 5 rows
+  } else if (width >= 768) {
+    itemsPerPage = 15; // 3 columns × 5 rows
+  } else {
+    itemsPerPage = 10; // 2 columns × 5 rows
+  }
+}
 
 // Load and parse CSV
 async function loadProducts() {
@@ -30,17 +44,22 @@ async function loadProducts() {
   }
 }
 
-// Render products
+// Render products with pagination
 function renderProducts() {
   const productList = document.getElementById('productList');
   
   if (filteredProducts.length === 0) {
     productList.innerHTML = '<div class="no-products">No products found</div>';
+    document.getElementById('pagination').style.display = 'none';
     return;
   }
   
-  productList.innerHTML = filteredProducts.map((product, index) => `
-    <div class="product-card" style="animation-delay: ${index * 0.1}s">
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+  
+  productList.innerHTML = paginatedProducts.map((product, index) => `
+    <div class="product-card" style="animation-delay: ${index * 0.05}s">
       <div class="product-image-wrapper">
         <img src="${product.image}" alt="${product.name}" class="product-image">
       </div>
@@ -51,16 +70,66 @@ function renderProducts() {
           <span class="product-price">${product.price}</span>
         </div>
         <button class="shop-btn" onclick="window.open('${product.link}', '_blank')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <path d="M16 10a4 4 0 0 1-8 0"></path>
           </svg>
-          <span>Shop Now</span>
+          <span>Shop</span>
         </button>
       </div>
     </div>
   `).join('');
+  
+  renderPagination();
+}
+
+// Render pagination controls
+function renderPagination() {
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const pagination = document.getElementById('pagination');
+  
+  if (totalPages <= 1) {
+    pagination.style.display = 'none';
+    return;
+  }
+  
+  pagination.style.display = 'flex';
+  
+  let paginationHTML = `
+    <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+      ←
+    </button>
+  `;
+  
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+      paginationHTML += `
+        <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">
+          ${i}
+        </button>
+      `;
+    } else if (i === currentPage - 2 || i === currentPage + 2) {
+      paginationHTML += '<span class="pagination-info">...</span>';
+    }
+  }
+  
+  paginationHTML += `
+    <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+      →
+    </button>
+  `;
+  
+  pagination.innerHTML = paginationHTML;
+}
+
+// Change page
+function changePage(page) {
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  if (page < 1 || page > totalPages) return;
+  currentPage = page;
+  renderProducts();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Filter by category
@@ -86,11 +155,13 @@ function applyFilters(searchQuery = '') {
     return matchesCategory && matchesSearch;
   });
   
+  currentPage = 1;
   renderProducts();
 }
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
+  updateItemsPerPage();
   loadProducts();
   
   document.querySelectorAll('.category-btn').forEach(btn => {
@@ -99,5 +170,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   document.getElementById('searchInput').addEventListener('input', (e) => {
     searchProducts(e.target.value);
+  });
+  
+  window.addEventListener('resize', () => {
+    const oldItemsPerPage = itemsPerPage;
+    updateItemsPerPage();
+    if (oldItemsPerPage !== itemsPerPage) {
+      currentPage = 1;
+      renderProducts();
+    }
   });
 });
