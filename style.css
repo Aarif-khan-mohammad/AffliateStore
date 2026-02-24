@@ -367,11 +367,13 @@ body {
   }
   
   .product-card {
-    aspect-ratio: 0.75;
+    height: auto;
+    min-height: 320px;
   }
   
   .product-image-wrapper {
     padding: 1.5rem;
-    aspect-ratio: 1.2;
+    height: 200px;
+    aspect-ratio: auto;
   }
 }
