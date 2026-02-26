@@ -56,6 +56,19 @@ body {
   margin: 0 auto;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-image {
+  height: 50px;
+  width: auto;
+  border-radius: 50%;
 }
 
 .brand-name {
@@ -67,6 +80,32 @@ body {
   background-clip: text;
   letter-spacing: 1px;
   text-transform: uppercase;
+}
+
+.instagram-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  transition: transform 0.3s ease;
+  text-decoration: none;
+}
+
+.instagram-link:hover {
+  transform: scale(1.1);
+}
+
+.instagram-icon {
+  height: 32px;
+  width: 32px;
+}
+
+.instagram-text {
+  font-size: 0.7rem;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .search-container {
@@ -346,8 +385,17 @@ body {
     padding: 1rem 1.5rem;
   }
   
+  .logo-image {
+    height: 35px;
+  }
+  
   .brand-name {
     font-size: 1.5rem;
+  }
+  
+  .instagram-icon {
+    height: 28px;
+    width: 28px;
   }
 
   .search-container {
