@@ -376,6 +376,44 @@ body {
   padding: 0 1rem;
 }
 
+.seo-content {
+  max-width: 1400px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: rgba(20, 20, 40, 0.6);
+  border-radius: 16px;
+  border: 2px solid rgba(138, 43, 226, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.8;
+}
+
+.seo-content h2 {
+  font-size: 1.8rem;
+  color: #fff;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #00d4ff, #8a2be2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.seo-content h3 {
+  font-size: 1.3rem;
+  color: #00d4ff;
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.seo-content p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.seo-content strong {
+  color: #fff;
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
   .main-content {
     padding-top: 80px;
