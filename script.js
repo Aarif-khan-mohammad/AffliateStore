@@ -3,6 +3,8 @@ let filteredProducts = [];
 let currentCategory = 'All';
 let currentPage = 1;
 let itemsPerPage = 10;
+let currentSort = 'default';
+let currentPriceRange = 'all';
 
 // Calculate items per page based on screen size
 function updateItemsPerPage() {
@@ -14,6 +16,11 @@ function updateItemsPerPage() {
   } else {
     itemsPerPage = 10; // 2 columns × 5 rows
   }
+}
+
+// Parse price to number
+function parsePrice(priceStr) {
+  return parseInt(priceStr.replace(/[^0-9]/g, '')) || 0;
 }
 
 // Load and parse CSV
@@ -33,7 +40,9 @@ async function loadProducts() {
         price: values[2],
         category: values[3],
         image: values[4],
-        link: values[5]
+        link: values[5],
+        priceNum: parsePrice(values[2]),
+        mrpNum: parsePrice(values[1])
       };
     });
     
@@ -152,11 +161,51 @@ function applyFilters(searchQuery = '') {
   filteredProducts = allProducts.filter(product => {
     const matchesCategory = currentCategory === 'All' || product.category === currentCategory;
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    
+    // Price range filter
+    let matchesPrice = true;
+    if (currentPriceRange !== 'all') {
+      const price = product.priceNum;
+      if (currentPriceRange === '0-500') matchesPrice = price < 500;
+      else if (currentPriceRange === '500-1000') matchesPrice = price >= 500 && price < 1000;
+      else if (currentPriceRange === '1000-5000') matchesPrice = price >= 1000 && price < 5000;
+      else if (currentPriceRange === '5000+') matchesPrice = price >= 5000;
+    }
+    
+    return matchesCategory && matchesSearch && matchesPrice;
   });
+  
+  // Apply sorting
+  if (currentSort === 'price-low') {
+    filteredProducts.sort((a, b) => a.priceNum - b.priceNum);
+  } else if (currentSort === 'price-high') {
+    filteredProducts.sort((a, b) => b.priceNum - a.priceNum);
+  } else if (currentSort === 'discount') {
+    filteredProducts.sort((a, b) => {
+      const discountA = ((a.mrpNum - a.priceNum) / a.mrpNum) * 100;
+      const discountB = ((b.mrpNum - b.priceNum) / b.mrpNum) * 100;
+      return discountB - discountA;
+    });
+  }
   
   currentPage = 1;
   renderProducts();
+}
+
+// Sort products
+function sortProducts(sortType) {
+  currentSort = sortType;
+  applyFilters(document.getElementById('searchInput').value);
+}
+
+// Filter by price range
+function filterByPrice(range) {
+  currentPriceRange = range;
+  applyFilters(document.getElementById('searchInput').value);
+  
+  document.querySelectorAll('.price-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.range === range);
+  });
 }
 
 // Event listeners
@@ -170,6 +219,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   document.getElementById('searchInput').addEventListener('input', (e) => {
     searchProducts(e.target.value);
+  });
+  
+  document.getElementById('sortSelect').addEventListener('change', (e) => {
+    sortProducts(e.target.value);
+  });
+  
+  document.querySelectorAll('.price-btn').forEach(btn => {
+    btn.addEventListener('click', () => filterByPrice(btn.dataset.range));
   });
   
   window.addEventListener('resize', () => {
