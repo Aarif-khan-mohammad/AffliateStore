@@ -145,7 +145,18 @@ function toggleCode(index) {
 // Copy coupon code
 function copyCode(code) {
   navigator.clipboard.writeText(code).then(() => {
-    alert('Coupon code copied: ' + code);
+    const buttons = document.querySelectorAll('.copy-code-btn');
+    buttons.forEach(btn => {
+      if (btn.onclick && btn.onclick.toString().includes(code)) {
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.background = 'linear-gradient(135deg, #00d4ff, #00ff88)';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = 'linear-gradient(135deg, #8a2be2, #00d4ff)';
+        }, 2000);
+      }
+    });
   });
 }
 

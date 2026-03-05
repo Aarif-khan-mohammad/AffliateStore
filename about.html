@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Vibe & Velocity</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="logo-container">
+        <a href="index.html" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+          <img src="logo.png" alt="Logo" class="logo-image">
+          <h1 class="brand-name">Vibe & Velocity</h1>
+        </a>
+      </div>
+      <a href="https://www.instagram.com/vibe.andvelocity?igsh=c2M4cTFqOGxxZWxp" target="_blank" class="instagram-link">
+        <img src="instagram.png" alt="Instagram" class="instagram-icon">
+        <span class="instagram-text">Follow Us!!</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="app">
+    <div class="main-content">
+      <!-- SEO Content -->
+      <section class="seo-content">
+        <h2>Vibe & Velocity - Shop Cheap Products Under 500 & 1000 - Best Budget Deals</h2>
+        <p>Welcome to <strong>Vibe & Velocity</strong> (Vibe and Velocity) - your ultimate destination for <strong>cheap products under 500</strong> and <strong>products under 1000 rupees</strong>. Find the best <strong>budget mobiles</strong>, affordable fashion, and cheap gadgets at unbeatable prices.</p>
+        <h3>Budget Mobiles & Smartphones Under 20000</h3>
+        <p>Discover <strong>cheap mobiles under 10000</strong> and <strong>budget smartphones under 15000</strong>. Shop realme NARZO series, affordable 5G phones, and best value smartphones with amazing features at lowest prices.</p>
+        <h3>Fashion & Accessories Under Budget</h3>
+        <p>Explore trendy <strong>fashion items under 500</strong>, stylish dresses, kurtas, bags, and accessories. Get premium quality clothing and fashion products at cheap prices. Perfect for budget shopping.</p>
+        <h3>Gadgets & Electronics at Best Prices</h3>
+        <p>Shop <strong>cheap gadgets under 1000</strong> including power banks, earphones, phone accessories, and more. Best deals on electronics and tech products for budget-conscious shoppers.</p>
+        <p><strong>Vibe and Velocity</strong> is your trusted online store for affordable shopping. Visit VibeAndVelocity for the best deals on budget products.</p>
+      </section>
+
+      <div class="visitor-counter">
+        <div class="visitor-content">
+          <div class="visitor-title">Trusted Users</div>
+          <div class="visitor-count-row">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <polyline points="17 11 19 13 23 9"></polyline>
+            </svg>
+            <strong id="visitorCount">0</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2026 Vibe & Velocity. All Rights Reserved.</p>
+      <a href="privacy-policy.html" class="footer-link">Privacy Policy</a>
+    </div>
+  </footer>
+
+  <script>
+    // Visitor counter
+    function initVisitorCounter() {
+      const VISITOR_KEY = 'vibeandvelocity_visitor';
+      const COUNT_KEY = 'vibeandvelocity_count';
+      
+      const hasVisited = localStorage.getItem(VISITOR_KEY);
+      
+      if (!hasVisited) {
+        localStorage.setItem(VISITOR_KEY, 'true');
+        let count = parseInt(localStorage.getItem(COUNT_KEY) || '0');
+        count++;
+        localStorage.setItem(COUNT_KEY, count.toString());
+      }
+      
+      const count = parseInt(localStorage.getItem(COUNT_KEY) || '0');
+      document.getElementById('visitorCount').textContent = count;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initVisitorCounter();
+    });
+  </script>
+</body>
+</html>
