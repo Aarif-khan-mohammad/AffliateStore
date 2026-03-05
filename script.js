@@ -5,6 +5,10 @@ let currentPage = 1;
 let itemsPerPage = 10;
 let currentSort = 'default';
 let currentPriceRange = 'all';
+let allCoupons = [];
+let filteredCoupons = [];
+let currentSite = 'All';
+let showingCoupons = false;
 
 // Calculate items per page based on screen size
 function updateItemsPerPage() {
@@ -53,6 +57,98 @@ async function loadProducts() {
   }
 }
 
+// Load coupons
+async function loadCoupons() {
+  try {
+    const response = await fetch('coupons.csv');
+    const csvText = await response.text();
+    
+    const lines = csvText.trim().split('\n');
+    allCoupons = lines.slice(1).map(line => {
+      const values = line.split(',');
+      return {
+        site: values[0],
+        code: values[1],
+        description: values[2],
+        discount: values[3]
+      };
+    });
+    filteredCoupons = allCoupons;
+  } catch (error) {
+    console.error('Error loading coupons:', error);
+  }
+}
+
+// Filter coupons by site
+function filterCouponsBySite(site) {
+  currentSite = site;
+  
+  if (site === 'All') {
+    filteredCoupons = allCoupons;
+  } else {
+    filteredCoupons = allCoupons.filter(coupon => coupon.site === site);
+  }
+  
+  renderCoupons();
+  
+  document.querySelectorAll('.site-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.site === site);
+  });
+}
+
+// Render coupons
+function renderCoupons() {
+  const couponsList = document.getElementById('couponsList');
+  
+  if (filteredCoupons.length === 0) {
+    couponsList.innerHTML = '<div class="no-products">No coupons available</div>';
+    return;
+  }
+  
+  couponsList.innerHTML = filteredCoupons.map((coupon, index) => `
+    <div class="coupon-card">
+      <div class="coupon-header">
+        <div class="coupon-site">${coupon.site}</div>
+        <div class="coupon-discount">${coupon.discount}</div>
+      </div>
+      <div class="coupon-description">${coupon.description}</div>
+      <div class="coupon-code-container">
+        <div class="coupon-code hidden" id="code-${index}">${coupon.code}</div>
+        <button class="toggle-code-btn" onclick="toggleCode(${index})">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eye-${index}">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+        <button class="copy-code-btn" onclick="copyCode('${coupon.code}')">
+          Copy
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Toggle coupon code visibility
+function toggleCode(index) {
+  const codeElement = document.getElementById(`code-${index}`);
+  const eyeIcon = document.getElementById(`eye-${index}`);
+  
+  if (codeElement.classList.contains('hidden')) {
+    codeElement.classList.remove('hidden');
+    eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+  } else {
+    codeElement.classList.add('hidden');
+    eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+  }
+}
+
+// Copy coupon code
+function copyCode(code) {
+  navigator.clipboard.writeText(code).then(() => {
+    alert('Coupon code copied: ' + code);
+  });
+}
+
 // Render products with pagination
 function renderProducts() {
   const productList = document.getElementById('productList');
@@ -67,8 +163,16 @@ function renderProducts() {
   const endIndex = startIndex + itemsPerPage;
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
   
-  productList.innerHTML = paginatedProducts.map((product, index) => `
+  productList.innerHTML = paginatedProducts.map((product, index) => {
+    const discount = product.mrpNum && product.priceNum ? Math.round(((product.mrpNum - product.priceNum) / product.mrpNum) * 100) : 0;
+    return `
     <div class="product-card" style="animation-delay: ${index * 0.05}s">
+      ${discount > 0 ? `<div class="discount-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+        </svg>
+        ${discount}% OFF
+      </div>` : ''}
       <div class="product-image-wrapper">
         <img src="${product.image}" alt="${product.name}" class="product-image">
       </div>
@@ -88,7 +192,7 @@ function renderProducts() {
         </button>
       </div>
     </div>
-  `).join('');
+  `}).join('');
   
   renderPagination();
 }
@@ -144,10 +248,26 @@ function changePage(page) {
 // Filter by category
 function filterByCategory(category) {
   currentCategory = category;
-  applyFilters();
+  
+  if (category === 'Coupons') {
+    showingCoupons = true;
+    document.getElementById('productList').style.display = 'none';
+    document.getElementById('pagination').style.display = 'none';
+    document.getElementById('couponsContainer').style.display = 'block';
+    document.querySelector('.sort-filter').style.display = 'none';
+    document.querySelector('.price-filter').style.display = 'none';
+    renderCoupons();
+  } else {
+    showingCoupons = false;
+    document.getElementById('productList').style.display = 'grid';
+    document.getElementById('couponsContainer').style.display = 'none';
+    document.querySelector('.sort-filter').style.display = 'flex';
+    document.querySelector('.price-filter').style.display = 'block';
+    applyFilters();
+  }
   
   document.querySelectorAll('.category-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.category === category);
+    btn.classList.toggle('active', btn.dataset.category === category || (category === 'Coupons' && btn.id === 'couponsBtn'));
   });
 }
 
@@ -208,17 +328,47 @@ function filterByPrice(range) {
   });
 }
 
+// Visitor counter
+function initVisitorCounter() {
+  const VISITOR_KEY = 'vibeandvelocity_visitor';
+  const COUNT_KEY = 'vibeandvelocity_count';
+  
+  // Check if user has visited before
+  const hasVisited = localStorage.getItem(VISITOR_KEY);
+  
+  if (!hasVisited) {
+    // New visitor
+    localStorage.setItem(VISITOR_KEY, 'true');
+    
+    // Increment count
+    let count = parseInt(localStorage.getItem(COUNT_KEY) || '0');
+    count++;
+    localStorage.setItem(COUNT_KEY, count.toString());
+  }
+  
+  // Display count
+  const count = parseInt(localStorage.getItem(COUNT_KEY) || '0');
+  document.getElementById('visitorCount').textContent = count;
+}
+
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
   updateItemsPerPage();
   loadProducts();
+  loadCoupons();
+  initVisitorCounter();
   
   document.querySelectorAll('.category-btn').forEach(btn => {
-    btn.addEventListener('click', () => filterByCategory(btn.dataset.category));
+    btn.addEventListener('click', () => {
+      const category = btn.dataset.category || 'Coupons';
+      filterByCategory(category);
+    });
   });
   
   document.getElementById('searchInput').addEventListener('input', (e) => {
-    searchProducts(e.target.value);
+    if (!showingCoupons) {
+      searchProducts(e.target.value);
+    }
   });
   
   document.getElementById('sortSelect').addEventListener('change', (e) => {
@@ -227,6 +377,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   document.querySelectorAll('.price-btn').forEach(btn => {
     btn.addEventListener('click', () => filterByPrice(btn.dataset.range));
+  });
+  
+  // Site filter buttons for coupons
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('site-btn') || e.target.closest('.site-btn')) {
+      const btn = e.target.classList.contains('site-btn') ? e.target : e.target.closest('.site-btn');
+      filterCouponsBySite(btn.dataset.site);
+    }
   });
   
   window.addEventListener('resize', () => {

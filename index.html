@@ -169,6 +169,15 @@
               </svg>
               <span>Kitchen</span>
             </button>
+            <button class="category-btn" data-category="Coupons" id="couponsBtn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 8.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2.5"></path>
+                <path d="M21 15.5V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2.5"></path>
+                <path d="M3 8.5a2.5 2.5 0 0 1 0 7"></path>
+                <path d="M21 8.5a2.5 2.5 0 0 0 0 7"></path>
+              </svg>
+              <span>Coupons</span>
+            </button>
           </div>
         </div>
         
@@ -198,7 +207,32 @@
         <div class="loading">Loading products...</div>
       </div>
       
+      <div class="coupons-container" id="couponsContainer" style="display: none;">
+        <h2 class="coupons-title">💰 Exclusive Coupon Codes</h2>
+        <div class="coupon-filter">
+          <label class="filter-label">Filter by Site:</label>
+          <div class="site-buttons">
+            <button class="site-btn active" data-site="All">All</button>
+            <button class="site-btn" data-site="Amazon">Amazon</button>
+            <button class="site-btn" data-site="Flipkart">Flipkart</button>
+            <button class="site-btn" data-site="Myntra">Myntra</button>
+            <button class="site-btn" data-site="Ajio">Ajio</button>
+            <button class="site-btn" data-site="Nykaa">Nykaa</button>
+          </div>
+        </div>
+        <div class="coupons-grid" id="couponsList"></div>
+      </div>
+      
       <div class="pagination" id="pagination"></div>
+      
+      <div class="visitor-counter">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <polyline points="17 11 19 13 23 9"></polyline>
+        </svg>
+        <span><strong id="visitorCount">0</strong> Trusted Users Visiting Us</span>
+      </div>
       
       <!-- SEO Content -->
       <section class="seo-content">
