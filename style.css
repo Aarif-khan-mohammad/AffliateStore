@@ -779,6 +779,22 @@ body {
   color: #00d4ff;
   font-size: 2rem;
   text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  transition: transform 0.5s ease;
+}
+
+@keyframes countUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.visitor-count-row strong.animate {
+  animation: countUp 0.5s ease;
 }
 
 @media (max-width: 768px) {
