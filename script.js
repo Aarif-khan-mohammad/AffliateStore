@@ -342,13 +342,15 @@ function filterByPrice(range) {
 // Visitor counter
 function initVisitorCounter() {
   const VISITOR_KEY = 'vibeandvelocity_visitor';
-  const COUNT_KEY = 'vibeandvelocity_count';
-  const LAST_UPDATE_KEY = 'vibeandvelocity_last_update';
+  const BASE_COUNT = 1250; // Starting count
+  const START_DATE = new Date('2026-03-01').getTime(); // Launch date
   
   // Animate count update
   function animateCount(newCount) {
     const countElement = document.getElementById('visitorCount');
     const oldCount = parseInt(countElement.textContent);
+    
+    if (oldCount === newCount) return;
     
     countElement.classList.add('animate');
     
@@ -356,7 +358,7 @@ function initVisitorCounter() {
     const increment = newCount > oldCount ? 1 : -1;
     const duration = 500;
     const steps = Math.abs(newCount - oldCount);
-    const stepDuration = duration / steps;
+    const stepDuration = duration / Math.max(steps, 1);
     
     const timer = setInterval(() => {
       current += increment;
@@ -369,55 +371,48 @@ function initVisitorCounter() {
     }, stepDuration);
   }
   
-  // Check if user has visited before
-  const hasVisited = localStorage.getItem(VISITOR_KEY);
-  
-  if (!hasVisited) {
-    // New visitor
-    localStorage.setItem(VISITOR_KEY, 'true');
+  // Calculate global count based on time
+  function getGlobalCount() {
+    const now = Date.now();
+    const minutesPassed = Math.floor((now - START_DATE) / (60 * 1000));
     
-    // Increment count
-    let count = parseInt(localStorage.getItem(COUNT_KEY) || '0');
-    count++;
-    localStorage.setItem(COUNT_KEY, count.toString());
+    // Add random increments every 3 minutes
+    let additionalCount = 0;
+    const incrementIntervals = Math.floor(minutesPassed / 3);
+    
+    for (let i = 0; i < incrementIntervals; i++) {
+      const seed = START_DATE + (i * 3 * 60 * 1000);
+      const random = Math.sin(seed) * 10000;
+      const increment = [1, 2, 3, 5][Math.floor(Math.abs(random) % 4)];
+      additionalCount += increment;
+    }
+    
+    // Subtract random decrements every 30 minutes
+    const decrementIntervals = Math.floor(minutesPassed / 30);
+    
+    for (let i = 0; i < decrementIntervals; i++) {
+      const seed = START_DATE + (i * 30 * 60 * 1000) + 12345;
+      const random = Math.sin(seed) * 10000;
+      const decrement = [1, 2, 4, 7][Math.floor(Math.abs(random) % 4)];
+      additionalCount -= decrement;
+    }
+    
+    return BASE_COUNT + additionalCount;
   }
   
-  // Auto increment count randomly
-  const lastUpdate = parseInt(localStorage.getItem(LAST_UPDATE_KEY) || '0');
-  const now = Date.now();
-  
-  const minInterval = 1 * 60 * 1000;
-  const maxInterval = 6 * 60 * 1000;
-  const randomInterval = Math.floor(Math.random() * (maxInterval - minInterval + 1)) + minInterval;
-  
-  if (now - lastUpdate > randomInterval) {
-    let count = parseInt(localStorage.getItem(COUNT_KEY) || '0');
-    const increments = [1, 2, 3, 5];
-    const randomIncrement = increments[Math.floor(Math.random() * increments.length)];
-    count += randomIncrement;
-    localStorage.setItem(COUNT_KEY, count.toString());
-    localStorage.setItem(LAST_UPDATE_KEY, now.toString());
+  // Mark user as visited
+  if (!localStorage.getItem(VISITOR_KEY)) {
+    localStorage.setItem(VISITOR_KEY, 'true');
   }
   
-  // Display count
-  const count = parseInt(localStorage.getItem(COUNT_KEY) || '0');
+  // Display initial count
+  const count = getGlobalCount();
   document.getElementById('visitorCount').textContent = count;
   
-  // Set up periodic updates
+  // Update count every minute
   setInterval(() => {
-    const lastUpdate = parseInt(localStorage.getItem(LAST_UPDATE_KEY) || '0');
-    const now = Date.now();
-    const randomInterval = Math.floor(Math.random() * (maxInterval - minInterval + 1)) + minInterval;
-    
-    if (now - lastUpdate > randomInterval) {
-      let count = parseInt(localStorage.getItem(COUNT_KEY) || '0');
-      const increments = [1, 2, 3, 5];
-      const randomIncrement = increments[Math.floor(Math.random() * increments.length)];
-      count += randomIncrement;
-      localStorage.setItem(COUNT_KEY, count.toString());
-      localStorage.setItem(LAST_UPDATE_KEY, now.toString());
-      animateCount(count);
-    }
+    const newCount = getGlobalCount();
+    animateCount(newCount);
   }, 60000); // Check every minute
 }
 
