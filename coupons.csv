@@ -1,11 +1,34 @@
-site,code,description,discount
-Amazon,SAVE20,Get 20% off on electronics,20% OFF
-Flipkart,FLIP50,Flat ₹50 off on orders above ₹500,₹50 OFF
-Myntra,FASHION30,30% off on fashion items,30% OFF
-Ajio,AJIO100,₹100 off on first order,₹100 OFF
-Nykaa,BEAUTY15,15% off on beauty products,15% OFF
-Amazon,MOBILE10,10% off on mobiles,10% OFF
-Flipkart,GADGET25,25% off on gadgets,25% OFF
-Myntra,STYLE40,40% off on select styles,40% OFF
-Ajio,NEWUSER,Extra 20% off for new users,20% OFF
-Amazon,PRIME50,₹50 cashback for Prime members,₹50 Cashback
+Ajio,NEW30,30% Off up to ₹500 (No Min Order),30% OFF
+Ajio,FASHIONATION10,Extra 10% OFF on ₹1990+,10% OFF
+Ajio,SALE10,Extra 10% OFF on ₹2190+,10% OFF
+Ajio,AJIOMANIA800,Extra ₹800 OFF on ₹5590+,₹800 OFF
+Ajio,FREEDEL,Free Shipping on all orders (6 PM - Midnight),FREE SHIPPING
+Myntra,MYNTRA500,Flat ₹500 OFF + Free Shipping (First Order),₹500 OFF
+Myntra,MBB35,Flat 35% OFF on orders above ₹300,35% OFF
+Myntra,STACKUP,Extra 20% OFF on orders above ₹999,20% OFF
+Myntra,FWDNEW200,Extra ₹200 OFF on Myntra FWD for New Users,₹200 OFF
+Myntra,NORETURNS10,Extra 10% OFF (Items non-returnable),10% OFF
+Bewakoof,GETCASH10,Extra 10% OFF on sitewide orders above ₹499,10% OFF
+Bewakoof,BKVISA15,Extra 15% OFF for Visa Cardholders,15% OFF
+Bewakoof,CARGOS100,Flat ₹100 OFF on orders above ₹1299,₹100 OFF
+Snitch,PW15N,Flat 15% OFF on all trendy menswear,15% OFF
+Zivame,ZIVFIRST250,Flat ₹250 OFF on first order above ₹999,₹250 OFF
+Zivame,ZV10,Extra 10% OFF on orders above ₹999,10% OFF
+Zivame,ZSPECIAL200,Extra ₹200 OFF on orders above ₹1799,₹200 OFF
+Zivame,APPY150,Flat ₹150 OFF for New App Users,₹150 OFF \
+Nykaa,NEW10,Extra 10% OFF on first website purchase,10% OFF
+Nykaa,EXTRA400I,Flat ₹400 OFF on first app order,₹400 OFF
+Nykaa,EXTRA10%,Extra 10% OFF on first app order,10% OFF
+Dot & Key,GB30,Extra 30% OFF on orders above ₹799,30% OFF
+Dot & Key,SAVE100,Flat ₹100 OFF on all orders (No minimum),₹100 OFF
+Dot & Key,COMBO25,Flat 25% OFF on Skincare Combos,25% OFF
+Amazon,SAVE200,Extra ₹200 Cashback via Amazon Pay on Grocery,₹200 CASHBACK
+Flipkart,BANK10,10% Instant Discount on select Bank Cards,10% OFF
+Tata CLiQ,NEW500,Flat ₹500 OFF on first order above ₹2500,₹500 OFF
+Tata CLiQ,TCFICICIVDEMI,Flat 15% OFF on ICICI Bank Credit Cards (₹5000+),15% OFF
+Tata CLiQ,WATCHFEST10,Extra 10% OFF on Smartwatches (₹5990+),10% OFF
+Tata CLiQ,FASHION10,Extra 10% OFF on orders above ₹2399,10% OFF
+JioMart,SHOP75,Flat ₹75 OFF on orders above ₹399,₹75 OFF
+JioMart,WOW100,Flat ₹100 OFF on orders above ₹299,₹100 OFF
+JioMart,QUICK50,Flat ₹50 OFF on quick electronics orders,₹50 OFF
+OPPO,PA261-15-Series,Flat ₹300 OFF on Reno15 Series 5G,₹300 OFF
